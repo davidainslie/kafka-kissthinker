@@ -38,26 +38,15 @@ object Build extends Build {
       )
     )
     .settings(libraryDependencies ++= {
-      val `specs2-version` = "3.7.3"
       val `akka-version` = "2.4.2"
       val `play-version` = "2.5.0"
       val `kafka-version` = "0.9.0.1"
-      val `gatling-version` = "2.1.7"
 
       Seq(
         "com.typesafe.play" %% "play-ws" % `play-version` withSources(),
         "org.apache.kafka" %% "kafka" % `kafka-version` withSources(),
-        "org.scalactic" %% "scalactic" % "2.2.6" withSources(),
-        "ch.qos.logback" % "logback-classic" % "1.1.3" withSources(),
-        "org.slf4j" % "jcl-over-slf4j" % "1.7.12" withSources(),
         "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.2" withSources()
       ) ++ Seq(
-        "io.gatling.highcharts" % "gatling-charts-highcharts" % `gatling-version` % IntegrationTest withSources(),
-        "io.gatling" % "gatling-test-framework" % `gatling-version` % IntegrationTest withSources(),
-        "org.specs2" %% "specs2-core" % `specs2-version` % Test withSources(),
-        "org.specs2" %% "specs2-mock" % `specs2-version` % Test withSources(),
-        "org.specs2" %% "specs2-matcher-extra" % `specs2-version` % Test withSources(),
-        "org.specs2" %% "specs2-junit" % `specs2-version` % Test withSources(),
         "org.scalatest" %% "scalatest" % "2.2.4" % Test withSources(),
         "com.typesafe.akka" %% "akka-testkit" % `akka-version` % Test withSources(),
         "com.typesafe.play" %% "play-test" % `play-version` % Test withSources(),

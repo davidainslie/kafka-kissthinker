@@ -7,9 +7,10 @@ import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord, RecordM
 import org.apache.kafka.common.serialization.{StringDeserializer, StringSerializer}
 import org.specs2.mutable.Specification
 
-class EmbeddedKafkaSpec extends Specification {
+class EmbeddedKafka1Spec extends Specification {
   "blah" should {
     "blah" in new EmbeddedKafka {
+      skipped
 
       val props = new Properties()
       props.put("bootstrap.servers", "localhost:9092")

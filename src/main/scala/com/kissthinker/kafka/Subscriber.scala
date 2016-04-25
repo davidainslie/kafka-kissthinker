@@ -2,6 +2,7 @@ package com.kissthinker.kafka
 
 import scala.util.Try
 import com.kissthinker.kafka.collection.array.Reader
+import kafka.consumer.{Consumer, ConsumerConfig}
 
 class Subscriber[M : Reader](topic: String)(implicit config: SubscriberConfig) {
   private val threadNumber = 1

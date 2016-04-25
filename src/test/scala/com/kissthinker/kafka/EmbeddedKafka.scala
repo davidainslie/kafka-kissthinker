@@ -6,10 +6,12 @@ import java.util.Properties
 import java.util.concurrent.TimeUnit
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import com.kissthinker.specs2.ComposableAround
 import org.apache.zookeeper.server.{ServerCnxnFactory, ZooKeeperServer}
 import org.specs2.execute.{AsResult, Result}
 import org.specs2.matcher.Scope
 import de.flapdoodle.embed.process.runtime.Network._
+import kafka.server.{KafkaConfig, KafkaServer}
 
 trait EmbeddedKafka extends Scope with ComposableAround {
   val zookeeper = new Zookeeper

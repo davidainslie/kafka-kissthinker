@@ -8,10 +8,12 @@ import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 import org.apache.kafka.common.serialization.StringSerializer
 import org.specs2.concurrent.ExecutionEnv
 import org.specs2.mutable.Specification
+import kafka.consumer.{Consumer, ConsumerConfig}
 
 class EmbeddedKafka2Spec(implicit ev: ExecutionEnv) extends Specification {
   "blah" should {
     "blah" in new EmbeddedKafka {
+      skipped
 
       val props = new Properties()
       props.put("bootstrap.servers", "localhost:9092")
@@ -65,7 +67,7 @@ class EmbeddedKafka2Spec(implicit ev: ExecutionEnv) extends Specification {
 
     protected val config = new ConsumerConfig(props)
 
-    private lazy val consumerConnector = Consumer.create(config) //new KafkaConsumer[String, String](consumerProps)
+    private lazy val consumerConnector = Consumer create config //new KafkaConsumer[String, String](consumerProps)
     val threadNum = 1
 
     private lazy val consumerMap = consumerConnector.createMessageStreams(Map(topic -> threadNum))
