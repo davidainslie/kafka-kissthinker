@@ -6,34 +6,37 @@ import java.util.Properties
 import java.util.concurrent.TimeUnit
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import com.kissthinker.specs2.ComposableAround
 import org.apache.zookeeper.server.{ServerCnxnFactory, ZooKeeperServer}
 import org.specs2.execute.{AsResult, Result}
-import org.specs2.matcher.Scope
 import org.specs2.mutable.SpecificationLike
+import org.specs2.specification.AroundEach
 import de.flapdoodle.embed.process.runtime.Network._
 import kafka.server.{KafkaConfig, KafkaServer}
 
-trait EmbeddedKafka {
+/**
+  * Mixing this trait into your (mutable) specification will provide an embedded Kafka (and Zookeeper) for each example you write.
+  * Note that this mixin will force your examples to be run sequentially.
+  * (For whatever reason, having multiple Kafkas running in parallel examples causes issues, even though each Kafka runs on a different port).
+  */
+trait EmbeddedKafka extends AroundEach {
   this: SpecificationLike =>
 
+  isolated
   sequential
 
-  trait EmbeddedKafkaContext extends Scope with ComposableAround {
-    val zookeeper = new Zookeeper
-    val kafka = new Kafka(zookeeper)
+  val zookeeper = new Zookeeper
+  val kafka = new Kafka(zookeeper)
 
-    implicit val subscriberConfig = new SubscriberConfig(zookeeper.address, kafka.address)
-    implicit val publisherConfig = new PublisherConfig(kafka.address)
+  implicit val subscriberConfig = new SubscriberConfig(zookeeper.address, kafka.address)
+  implicit val publisherConfig = new PublisherConfig(kafka.address)
 
-    override def around[R: AsResult](r: => R): Result = try {
-      zookeeper.start
-      kafka.start
-      super.around(r)
-    } finally {
-      kafka.stop
-      zookeeper.stop
-    }
+  override def around[R: AsResult](r: => R): Result = try {
+    zookeeper.start
+    kafka.start
+    AsResult(r)
+  } finally {
+    kafka.stop
+    zookeeper.stop
   }
 }
 

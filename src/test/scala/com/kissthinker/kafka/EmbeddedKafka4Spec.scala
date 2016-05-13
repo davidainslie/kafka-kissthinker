@@ -10,7 +10,7 @@ import org.specs2.mutable.Specification
 
 class EmbeddedKafka4Spec(implicit ev: ExecutionEnv) extends Specification with EmbeddedKafka {
   "Embedded Kafka" should {
-    "have message published and a subscription of said message" in new EmbeddedKafkaContext {
+    "have message published and a subscription of said message" in {
       val messageResult = Promise[String]()
 
       val subscriber = new Subscriber[String]("test-topic")
@@ -30,7 +30,7 @@ class EmbeddedKafka4Spec(implicit ev: ExecutionEnv) extends Specification with E
       messageResult.future must beEqualTo("Test message").awaitFor(3 seconds)
     }
 
-    "have message published and a subscription fail" in new EmbeddedKafkaContext {
+    "have message published and a subscription fail" in {
       implicit object StringFailureReader extends Reader[String] {
         override def read(bytes: Array[Byte]): Try[String] = Failure(new Exception("Test failure"))
       }

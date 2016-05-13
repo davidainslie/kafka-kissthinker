@@ -1,3 +1,4 @@
+/*
 package com.kissthinker.kafka
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -54,4 +55,4 @@ class EmbeddedKafka5Spec(implicit ev: ExecutionEnv) extends Specification with E
       messageResult.future must beEqualTo("Test failure").awaitFor(3 seconds)
     }
   }
-}
+}*/
