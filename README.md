@@ -116,4 +116,55 @@ gatling-it:test
 
 Example Usage
 -------------
-TODO
+Mixin EmbeddedKafka to your (mutable) specification. Each example you write will have Kafka available to test against.
+The example (shown below) provided in this library is EmbeddedKafkaSpec.
+
+```scala
+class EmbeddedKafkaSpec(implicit ev: ExecutionEnv) extends Specification with EmbeddedKafka {
+  "Embedded Kafka" should {
+    "have message published and a subscription of said message" in {
+      val messageResult = Promise[String]()
+
+      val subscriber = new Subscriber[String]("test-topic")
+
+      Future {
+        subscriber.subscribe collect {
+          case Success(message) =>
+            println(s"Subscriber got: $message")
+            messageResult success message
+        }
+      }
+
+      val publisher = new Publisher[String]("test-topic")
+
+      publisher publish "Test message"
+
+      messageResult.future must beEqualTo("Test message").awaitFor(3 seconds)
+    }
+
+    "have message published and a subscription fail" in {
+      implicit object StringFailureReader extends Reader[String] {
+        override def read(bytes: Array[Byte]): Try[String] = Failure(new Exception("Test failure"))
+      }
+
+      val messageResult = Promise[String]()
+
+      val subscriber = new Subscriber[String]("test-topic")
+
+      Future {
+        subscriber.subscribe collect {
+          case f @ Failure(t) =>
+            println(s"Subscriber got: $f")
+            messageResult success t.getMessage
+        }
+      }
+
+      val publisher = new Publisher[String]("test-topic")
+
+      publisher publish "Test message"
+
+      messageResult.future must beEqualTo("Test failure").awaitFor(3 seconds)
+    }
+  }
+}
+```
