@@ -34,7 +34,8 @@ object Build extends Build {
         "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
         "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
         "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
-        "Kamon Repository" at "http://repo.kamon.io"
+        "Kamon Repository" at "http://repo.kamon.io",
+        "jitpack" at "https://jitpack.io"
       )
     )
     .settings(libraryDependencies ++= {
