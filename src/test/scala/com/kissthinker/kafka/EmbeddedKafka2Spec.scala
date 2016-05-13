@@ -1,3 +1,4 @@
+/*
 package com.kissthinker.kafka
 
 import java.util.Properties
@@ -75,4 +76,4 @@ class EmbeddedKafka2Spec(implicit ev: ExecutionEnv) extends Specification {
 
     def read: Stream[String] = Stream.cons(new String(stream.head.message()), read)
   }
-}
+}*/

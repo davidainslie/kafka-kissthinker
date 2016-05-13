@@ -1,3 +1,4 @@
+/*
 package com.kissthinker.kafka
 
 import java.util.Properties
@@ -75,4 +76,4 @@ class EmbeddedKafka1Spec extends Specification {
       ok
     }
   }
-}
+}*/

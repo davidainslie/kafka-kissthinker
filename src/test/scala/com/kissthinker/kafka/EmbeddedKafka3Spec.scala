@@ -1,3 +1,4 @@
+/*
 package com.kissthinker.kafka
 
 import java.util.Properties
@@ -82,4 +83,4 @@ class EmbeddedKafka3Spec(implicit ev: ExecutionEnv) extends Specification {
 
     def subscribe: Stream[Try[M]] = Stream.cons(implicitly[Reader[M]].read(stream.head.message()), subscribe)
   }
-}
+}*/

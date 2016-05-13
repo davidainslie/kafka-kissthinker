@@ -8,7 +8,7 @@ import com.kissthinker.kafka.collection.array.Reader
 import org.specs2.concurrent.ExecutionEnv
 import org.specs2.mutable.Specification
 
-class EmbeddedKafka4Spec(implicit ev: ExecutionEnv) extends Specification with EmbeddedKafka {
+class EmbeddedKafka5Spec(implicit ev: ExecutionEnv) extends Specification with EmbeddedKafka {
   "Embedded Kafka" should {
     "have message published and a subscription of said message" in new EmbeddedKafkaContext {
       val messageResult = Promise[String]()

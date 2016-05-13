@@ -10,18 +10,23 @@ import com.kissthinker.specs2.ComposableAround
 import org.apache.zookeeper.server.{ServerCnxnFactory, ZooKeeperServer}
 import org.specs2.execute.{AsResult, Result}
 import org.specs2.matcher.Scope
+import org.specs2.mutable.SpecificationLike
 import de.flapdoodle.embed.process.runtime.Network._
 import kafka.server.{KafkaConfig, KafkaServer}
 
-trait EmbeddedKafka extends Scope with ComposableAround {
-  val zookeeper = new Zookeeper
-  val kafka = new Kafka(zookeeper)
+trait EmbeddedKafka {
+  this: SpecificationLike =>
 
-  implicit val subscriberConfig = new SubscriberConfig(zookeeper.address, kafka.address)
-  implicit val publisherConfig = new PublisherConfig(kafka.address)
+  sequential
 
-  override def around[R: AsResult](r: => R): Result = {
-    try {
+  trait EmbeddedKafkaContext extends Scope with ComposableAround {
+    val zookeeper = new Zookeeper
+    val kafka = new Kafka(zookeeper)
+
+    implicit val subscriberConfig = new SubscriberConfig(zookeeper.address, kafka.address)
+    implicit val publisherConfig = new PublisherConfig(kafka.address)
+
+    override def around[R: AsResult](r: => R): Result = try {
       zookeeper.start
       kafka.start
       super.around(r)
@@ -45,14 +50,14 @@ class Zookeeper {
 
   val port = getFreeServerPort
 
-  val address = s"127.0.0.1:$port"
+  val address = s"0.0.0.0:$port"
 
   val server = new ZooKeeperServer(/*snapDir*/ logs, /*logDir*/ logs, /*tickTime*/ 2000)
 
   def start = {
     println(s"Starting Zookeeper...")
     val factory = ServerCnxnFactory.createFactory
-    factory.configure(new InetSocketAddress("127.0.0.1", /*2181*/ port), /*maxClientCnxns*/ 1024)
+    factory.configure(new InetSocketAddress("0.0.0.0", /*2181*/ port), /*maxClientCnxns*/ 1024)
     factory.startup(server)
 
     // Let Zookeeper get going
@@ -78,14 +83,15 @@ class Zookeeper {
 class Kafka(zookeeper: Zookeeper) {
   val port = getFreeServerPort
 
-  val address = s"127.0.0.1:$port"
+  val address = s"0.0.0.0:$port"
 
   val props = new Properties()
   //props.put("zookeeper.connect", "127.0.0.1:2181")
   props.put("zookeeper.connect", zookeeper.address)
-  //props.setProperty("brokerid", "0")
-  props.setProperty("brokerid", "1")
-  props.setProperty("host.name", "127.0.0.1")
+  props.setProperty("brokerid", "0")
+  //props.setProperty("brokerid", "1")
+  props.setProperty("host.name", "0.0.0.0")
+  props.setProperty("advertised.host.name", "0.0.0.0")
   props.setProperty("port", s"$port")
   props.setProperty("num.partitions", "1")
   props.setProperty("default.replication.factor", "1")
